@@ -12,6 +12,11 @@
         android:minSdkVersion="19"
         android:targetSdkVersion="26" />
 
+    <!--危险权限-->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+
+    <!--一般权限-->
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -141,6 +146,9 @@
             android:configChanges="orientation|navigation|screenSize|screenLayout|uiMode|keyboard|keyboardHidden"
             android:screenOrientation="sensorLandscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+        <activity android:name=".PermissionsActivity"
+            android:theme="@style/AppTheme.NoActionBar.Permissions"
+            />
     </application>
 
 </manifest>

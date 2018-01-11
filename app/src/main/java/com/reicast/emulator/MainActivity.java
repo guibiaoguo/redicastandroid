@@ -612,6 +612,11 @@ public class MainActivity extends FragmentActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        // 缺少权限时, 进入权限配置页面
+        if (mPermissionsChecker.lacksPermissions(PERMISSIONS)) {
+            startPermissionsActivity();
+//            ActivityCompat.requestPermissions(this,PERMISSIONS,0);
+        }
         InputFragment fragment = (InputFragment) getSupportFragmentManager()
                 .findFragmentByTag("INPUT_FRAG");
         if (fragment != null && fragment.isVisible()) {
@@ -619,7 +624,6 @@ public class MainActivity extends FragmentActivity implements
                 fragment.moga.onResume();
             }
         }
-
         CloudFragment cloudfragment = (CloudFragment) getSupportFragmentManager()
                 .findFragmentByTag("CLOUD_FRAG");
         if (cloudfragment != null && cloudfragment.isVisible()) {
@@ -627,12 +631,11 @@ public class MainActivity extends FragmentActivity implements
                 cloudfragment.onResume();
             }
         }
-        // 缺少权限时, 进入权限配置页面
-        if (mPermissionsChecker.lacksPermissions(PERMISSIONS)) {
-            ActivityCompat.requestPermissions(this,PERMISSIONS,0)
 
-            ;
-        }
+    }
+
+    private void startPermissionsActivity() {
+        PermissionsActivity.startActivityForResult(this, REQUEST_CODE, PERMISSIONS);
     }
 
     @Override
@@ -691,13 +694,13 @@ public class MainActivity extends FragmentActivity implements
      */
     public native String stringFromJNI();
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode,permissions,grantResults);
-    }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // 拒绝时, 关闭页面, 缺少主要权限, 无法运行
+        if (requestCode == REQUEST_CODE && resultCode == PermissionsActivity.PERMISSIONS_DENIED) {
+            finish();
+        }
+        launchMainFragment(new FileBrowser());
     }
 }
